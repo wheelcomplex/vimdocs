@@ -6,6 +6,13 @@
 # base on https://github.com/yourihua/Documents/blob/master/Vim/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Vim%E6%90%AD%E5%BB%BAGo%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.mdown
 #
 
+if [ "$1" = 'debug' -a "$DEBUGVIMSETUP" != 'YES' ]
+then
+    export DEBUGVIMSETUP='YES'
+    /bin/bash -x $0 $@
+    exit $?
+fi
+
 if [ "$VIMSETUPNEW" != 'YES' ]
 then
 gcmd="git clone https://github.com/wheelcomplex/vimdocs.git ${HOME}/tmp/vimdocs/"
@@ -19,7 +26,12 @@ fi
     gcmd="${HOME}/tmp/vimdocs/`basename $0`"
     chmod +x $gcmd
     echo "Run script from git: $gcmd"
-    $gcmd
+    if "$DEBUGVIMSETUP" = 'YES' ]
+    then
+        /bin/bash -x $gcmd $@
+        exit $?
+    fi
+    $gcmd $@
     exit $?
 fi
 
