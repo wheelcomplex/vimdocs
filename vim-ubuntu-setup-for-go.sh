@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # bootstrap:
-# cd ${HOME} && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O vim-ubuntu-setup-for-go.sh && chmod +x vim-ubuntu-setup-for-go.sh && ./vim-ubuntu-setup-for-go.sh
+# cd ${HOME} && mkdir ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
 #
 # base on https://github.com/yourihua/Documents/blob/master/Vim/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Vim%E6%90%AD%E5%BB%BAGo%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.mdown
 #
@@ -17,6 +17,7 @@ if [ $? -ne 0 ]
 fi
     export VIMSETUPNEW='YES'
     gcmd="${HOME}/tmp/vimdocs/`basename $0`"
+    chmod +x $gcmd
     echo "Run script from git: $gcmd"
     $gcmd
     exit $?
@@ -93,7 +94,7 @@ if [ $cmdok -eq 0 ]
 fi
 
 cd ${HOME} 
-backdir="vim-back-wheelcomplex/`date +%Y-%m-%d-%H-%M-%S`/" &&mkdir -p ${HOME}/"$backdir"
+backdir="vim-back-wheelcomplex/`date +%Y-%m-%d-%H-%M-%S`/" &&mkdir -p "${HOME}/$backdir"
 if [ $? -ne 0 ]
 	then
 	echo "error: create backup directory failed: $backdir"
@@ -102,7 +103,9 @@ fi
 needback=`ls -a ${HOME}/.vim* 2>/dev/null|wc -l`
 if [ $needback -ne 0 ]
 	then
-	mv ${HOME}/.vim* ${HOME}/"$backdir"
+	mv ${HOME}/.vim* "${HOME}/$backdir"
+        test $? -ne 0 && echo "backup to ${HOME}/$backdir failed." && exit 1
+        echo "backup to ${HOME}/$backdir ok"
 fi
 
 gcmd="git clone https://github.com/gmarik/Vundle.vim.git ${HOME}/.vim/bundle/Vundle.vim"
@@ -122,6 +125,7 @@ if [ $? -ne 0 ]
 fi
 
 gcmd="vim +PluginInstall +qall"
+$gcmd
 if [ $? -ne 0 ]
 	then
 	echo "error: PluginInstall failed: $gcmd"
@@ -133,8 +137,9 @@ fi
 cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh
 if [ $? -ne 0 ]
 	then
-	echo "error: YouCompleteMe compile failed: $gcmd"
+	echo "error: YouCompleteMe compile failed: cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh"
 	echo "TIPS: https://github.com/Valloric/YouCompleteMe"
 	exit 1
 fi
+cd - >/dev/null 2>&1
 #
