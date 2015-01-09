@@ -30,25 +30,25 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'wheelcomplex/vimdocs/plugins/Vundle.vim'
 
 "
-Plugin 'fatih/vim-go'
+Plugin 'wheelcomplex/vimdocs/plugins/vim-go'
 "
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'wheelcomplex/vimdocs/plugins/YouCompleteMe'
 "
 " Track the engine.
-Plugin 'SirVer/ultisnips'
+Plugin 'wheelcomplex/vimdocs/plugins/ultisnips'
 
 " Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
+Plugin 'wheelcomplex/vimdocs/plugins/vim-snippets'
 
 "
 " Tagbar: a class outline viewer for Vim
-Plugin 'majutsushi/tagbar'
+Plugin 'wheelcomplex/vimdocs/plugins/tagbar'
 
 " directory tree view
-Plugin 'scrooloose/nerdtree'
+Plugin 'wheelcomplex/vimdocs/plugins/nerdtree'
 
 "
 " All of your Plugins must be added before the following line

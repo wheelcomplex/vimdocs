@@ -62,6 +62,14 @@ if [ $vimverok -eq 0 ]
 	exit 1
 fi
 
+cmdok=`which xdot| wc -l`
+if [ $cmdok -eq 0 ]
+	then
+	echo "error: xdot has not installed"
+	echo "TIPS: sudo apt-get update && sudo apt-get install xdot"
+	exit 1
+fi
+
 cmdok=`which git| wc -l`
 if [ $cmdok -eq 0 ]
 	then
@@ -120,11 +128,11 @@ if [ $needback -ne 0 ]
         echo "backup to ${HOME}/$backdir ok"
 fi
 
-gcmd="git clone https://github.com/gmarik/Vundle.vim.git ${HOME}/.vim/bundle/Vundle.vim"
-$gcmd
+gcmd="cp -a ${HOME}/tmp/vimdocs/plugins/* ${HOME}/.vim/bundle/"
+mkdir -p ${HOME}/.vim/bundle/ && $gcmd
 if [ $? -ne 0 ]
 	then
-	echo "error: git clone failed: $gcmd"
+	echo "error: copy plugins failed: $gcmd"
 	exit 1
 fi
 
@@ -133,6 +141,14 @@ $gcmd
 if [ $? -ne 0 ]
 	then
 	echo "error: create .vimrc failed: $gcmd"
+	exit 1
+fi
+
+gcmd="cp ${HOME}/tmp/vimdocs/fixdot ${HOME}/bin/"
+mkdir -p ${HOME}/bin && $gcmd && chmod +x ${HOME}/bin/fixdot
+if [ $? -ne 0 ]
+	then
+	echo "error: create ${HOME}/bin/fixdot failed: $gcmd"
 	exit 1
 fi
 
