@@ -1,0 +1,2 @@
+# vimdocs
+doc for vim
