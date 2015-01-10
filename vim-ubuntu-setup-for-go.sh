@@ -179,5 +179,6 @@ if [ $? -ne 0 ]
 	echo "TIPS: https://github.com/Valloric/YouCompleteMe"
 	exit 1
 fi
+echo "ALL DONE!"
 #cd - >/dev/null 2>&1
 #
