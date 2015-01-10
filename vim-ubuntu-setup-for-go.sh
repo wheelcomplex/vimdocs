@@ -128,7 +128,7 @@ if [ $needback -ne 0 ]
         echo "backup to ${HOME}/$backdir ok"
 fi
 
-gcmd="git clone https://github.com/wheelcomplex/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim
+gcmd="git clone https://github.com/wheelcomplex/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim"
 $gcmd
 if [ $? -ne 0 ]
 	then
