@@ -26,7 +26,7 @@ fi
     gcmd="${HOME}/tmp/vimdocs/`basename $0`"
     chmod +x $gcmd
     echo "Run script from git: $gcmd"
-    if "$DEBUGVIMSETUP" = 'YES' ]
+    if [ "$DEBUGVIMSETUP" = 'YES' ]
     then
         /bin/bash -x $gcmd $@
         exit $?
