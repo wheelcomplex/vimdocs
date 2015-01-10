@@ -128,7 +128,7 @@ if [ $needback -ne 0 ]
         echo "backup to ${HOME}/$backdir ok"
 fi
 
-gcmd="git clone https://github.com/wheelcomplex/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim"
+gcmd="git clone https://github.com/gmarik/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim"
 $gcmd
 if [ $? -ne 0 ]
 	then
@@ -159,6 +159,16 @@ if [ $? -ne 0 ]
 	echo "error: PluginInstall failed: $gcmd"
 	exit 1
 fi
+
+gcmd="vim +GoInstallBinaries +qall"
+$gcmd
+if [ $? -ne 0 ]
+	then
+	echo "error: +GoInstallBinaries +qall failed: $gcmd"
+	exit 1
+fi
+# vim +GoInstallBinaries +qall
+
 # start Vim，and run command :PluginInstall
 # :qall exit vim and compile YouCompleteMe
 
