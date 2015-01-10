@@ -128,11 +128,11 @@ if [ $needback -ne 0 ]
         echo "backup to ${HOME}/$backdir ok"
 fi
 
-gcmd="cp -a ${HOME}/tmp/vimdocs/plugins/* ${HOME}/.vim/bundle/"
-mkdir -p ${HOME}/.vim/bundle/ && $gcmd
+gcmd="git clone https://github.com/wheelcomplex/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim
+$gcmd
 if [ $? -ne 0 ]
 	then
-	echo "error: copy plugins failed: $gcmd"
+	echo "error: git clone bundle/Vundle.vim failed: $gcmd"
 	exit 1
 fi
 
@@ -162,12 +162,12 @@ fi
 # start Vim，and run command :PluginInstall
 # :qall exit vim and compile YouCompleteMe
 
-cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh
+cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.sh
 if [ $? -ne 0 ]
 	then
 	echo "error: YouCompleteMe compile failed: cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh"
 	echo "TIPS: https://github.com/Valloric/YouCompleteMe"
 	exit 1
 fi
-cd - >/dev/null 2>&1
+#cd - >/dev/null 2>&1
 #
