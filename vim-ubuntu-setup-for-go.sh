@@ -54,11 +54,29 @@ if [ ! -x /usr/bin/vim ]
 	exit 1
 fi
 
-vimverok=`/usr/bin/vim --version | grep -c 'VIM - Vi IMproved 7.'`
-if [ $vimverok -eq 0 ]
-	then
-	echo "error: this script support VIM - Vi IMproved 7.x only."
+vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
+if [ $vimverok -eq 7 ]
+then
+        vimverok=`/usr/bin/vim --version | grep -c 'VIM - Vi IMproved 7.'`
+        if [ $vimverok -eq 0 ]
+        	then
+        	echo "error: this script support VIM - Vi IMproved 7.x only."
+        	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
+        	exit 1
+        fi
+        vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $2}'`
+        if [ $vimverok -le 3 ]
+        	then
+        	echo "error: this script support VIM - Vi IMproved 7.4 or later"
+        	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
+        	echo "TIPS: http://www.vim.org/download.php"
+        	exit 1
+        fi
+elif [ $vimverok -lt 7 ]
+then
+	echo "error: this script support VIM - Vi IMproved 7.4 or later"
 	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
+	echo "TIPS: http://www.vim.org/download.php"
 	exit 1
 fi
 
