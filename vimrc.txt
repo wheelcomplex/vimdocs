@@ -59,6 +59,7 @@ filetype plugin indent on    " required
 syntax on
 
 " vim-go settings
+let g:go_fmt_command = "goimports"
 au FileType go nmap <Leader>s <Plug>(go-implements)
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
@@ -74,6 +75,8 @@ au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 au FileType go nmap <F3> :w<CR>:GoRun<CR><C-l>
 au FileType go nmap <F4> :w<CR>:GoBuild<CR><C-l>
+" fast package import
+au FileType go nmap <Leader>I :GoImport <C-d>
 
 " Syntax-highlighting for Functions, Methods and Structs
 let g:go_highlight_functions = 1
