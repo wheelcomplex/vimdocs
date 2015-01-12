@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # bootstrap:
-# cd ${HOME} && mkdir ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
+# cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
 #
 # base on https://github.com/yourihua/Documents/blob/master/Vim/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Vim%E6%90%AD%E5%BB%BAGo%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.mdown
 #
