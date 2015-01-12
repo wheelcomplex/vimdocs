@@ -89,28 +89,28 @@ fi
 cmdok=`env | grep -c 'GOARCH='`
 if [ $cmdok -eq 0 ]
 	then
-	echo "error: GOARCH environment has not setup"
+	echo "warnning: GOARCH environment has not setup"
 	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
 	echo "TIPS: http://golang.org/doc/install"
-	exit 1
+	#exit 1
 fi
 
 cmdok=`env | grep -c 'GOROOT='`
 if [ $cmdok -eq 0 ]
 	then
-	echo "error: GOROOT environment has not setup"
+	echo "warning: GOROOT environment has not setup"
 	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
 	echo "TIPS: http://golang.org/doc/install"
-	exit 1
+	#exit 1
 fi
 
 cmdok=`env | grep -c 'GOPATH='`
 if [ $cmdok -eq 0 ]
 	then
-	echo "error: GOPATH environment has not setup"
+	echo "warning: GOPATH environment has not setup"
 	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
 	echo "TIPS: http://golang.org/doc/install"
-	exit 1
+	#exit 1
 fi
 
 cd ${HOME} 
@@ -125,7 +125,12 @@ if [ $needback -ne 0 ]
 	then
 	mv ${HOME}/.vim* "${HOME}/$backdir"
         test $? -ne 0 && echo "backup to ${HOME}/$backdir failed." && exit 1
+        echo ""
+        echo ""
         echo "backup to ${HOME}/$backdir ok"
+        echo ""
+        echo ""
+        sleep 3
 fi
 
 gcmd="git clone https://github.com/gmarik/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim"
