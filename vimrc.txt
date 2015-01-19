@@ -37,13 +37,6 @@ Plugin 'fatih/vim-go'
 "
 Plugin 'Valloric/YouCompleteMe'
 "
-" Track the engine.
-Plugin 'SirVer/ultisnips'
-
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
-
-"
 " Tagbar: a class outline viewer for Vim
 Plugin 'majutsushi/tagbar'
 
@@ -65,8 +58,10 @@ au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
 au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
-au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>b <Plug>(go-build)
+" au FileType go nmap <leader>r <Plug>(go-run)
+" au FileType go nmap <leader>r :w<CR>:GoRun<CR>
+" au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>b :w<CR>:GoBuild<CR>
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <leader>c <Plug>(go-coverage)
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
@@ -89,12 +84,6 @@ let g:go_highlight_structs   = 1
 let g:ycm_key_list_select_completion = ['', '']
 let g:ycm_key_list_previous_completion = ['', '']
 let g:ycm_key_invoke_completion = '<C-Space>'
-
-"
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-o>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 "
 " fast preview dot file
@@ -204,8 +193,8 @@ set novisualbell
 
 " TAB setting{
 set expandtab        "replace <TAB> with spaces
-set softtabstop=4
-set shiftwidth=4
+set softtabstop=8
+set shiftwidth=8
 
 au FileType Makefile set noexpandtab
 "}                                  
