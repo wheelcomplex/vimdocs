@@ -59,7 +59,7 @@ au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
 au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 " au FileType go nmap <leader>r <Plug>(go-run)
-" au FileType go nmap <leader>r :w<CR>:GoRun<CR>
+au FileType go nmap <leader>r :w<CR>:GoRun<CR>
 " au FileType go nmap <leader>b <Plug>(go-build)
 au FileType go nmap <leader>b :w<CR>:GoBuild<CR>
 au FileType go nmap <leader>t <Plug>(go-test)
@@ -70,8 +70,8 @@ au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 " fast package import
 au FileType go nmap <Leader>m :GoImport <C-d>
-au FileType go nmap <F3> :w<CR>:!echo "---------vim go run ---------" && go run %<CR>
-au FileType go nmap <F4> :w<CR>:!echo "---------vim go build ---------" && go build %<CR>
+au FileType go nmap <F3> :w<CR>:!echo "---------vim go run ---------" && time go build -i % && go run %<CR>
+au FileType go nmap <F4> :w<CR>:!echo "---------vim go build ---------" && time go build -i %<CR>
 au FileType go nmap <F5> :w<CR>:!go install<CR>
 
 " Syntax-highlighting for Functions, Methods and Structs
