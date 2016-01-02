@@ -18,29 +18,11 @@ then
     exit $?
 fi
 
-utils="git hg:mercurial cmake vim"
-
-pkglist=""
-for aaa in $utils
-do
-	cmd=`echo "$aaa"|awk -F':' '{print $1}'`
-	pkg=`echo "$aaa"|awk -F':' '{print $2}'`
-	test -z "$pkg" && pkg="$cmd"
-	cmdok=`which $cmd| wc -l`
-	if [ $cmdok -eq 0 ]
-		then
-		echo "warning: try to install $pkg($cmd)"
-		pkglist="$pkglist $pkg"
-	fi
-done
-if [ -n "$pkglist" ]
+sudo true
+if [ $? -ne 0 ]
 	then
-	sudo apt-get -y install $pkglist
-	if [ $? -ne 0 ]
-		then
-		echo "error: packages install failed: $pkglist"
-		exit 1
-	fi
+	echo "error: you need sudo to install xdot"
+	exit 1
 fi
 
 cat /etc/issue.net
@@ -54,6 +36,18 @@ if [ `id -u` -eq 0 ]
 	then
 	echo "error: this script should no run by root."
 	exit 1
+fi
+
+cmdok=`which git| wc -l`
+if [ $cmdok -eq 0 ]
+	then
+	echo "warning: try to install git(git)"
+	sudo apt-get -y install git
+	if [ $? -ne 0 ]
+		then
+		echo "error: packages install failed: $pkglist"
+		exit 1
+	fi
 fi
 
 if [ "$VIMSETUPNEW" != 'YES' ]
@@ -76,6 +70,32 @@ then
     fi
     $gcmd $@
     exit $?
+fi
+
+
+utils="hg:mercurial cmake vim meld"
+
+pkglist=""
+for aaa in $utils
+do
+	cmd=`echo "$aaa"|awk -F':' '{print $1}'`
+	pkg=`echo "$aaa"|awk -F':' '{print $2}'`
+	test -z "$pkg" && pkg="$cmd"
+	cmdok=`which $cmd| wc -l`
+	if [ $cmdok -eq 0 ]
+		then
+		echo "warning: try to install $pkg($cmd)"
+		pkglist="$pkglist $pkg"
+	fi
+done
+if [ -n "$pkglist" ]
+	then
+	sudo apt-get -y install $pkglist
+	if [ $? -ne 0 ]
+		then
+		echo "error: packages install failed: $pkglist"
+		exit 1
+	fi
 fi
 
 vim7tips="sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
@@ -128,13 +148,13 @@ needback=`ls -a ${HOME}/.vim* 2>/dev/null|wc -l`
 if [ $needback -ne 0 ]
 	then
 	mv ${HOME}/.vim* "${HOME}/$backdir"
-        test $? -ne 0 && echo "backup to ${HOME}/$backdir failed." && exit 1
-        echo ""
-        echo ""
-        echo "backup to ${HOME}/$backdir ok"
-        echo ""
-        echo ""
-        sleep 3
+    test $? -ne 0 && echo "backup to ${HOME}/$backdir failed." && exit 1
+    echo ""
+    echo ""
+    echo "${HOME}/.vim\* backup to ${HOME}/$backdir ok"
+    echo ""
+    echo ""
+    sleep 3
 fi
 
 gcmd="git clone https://github.com/gmarik/Vundle.vim ${HOME}/.vim/bundle/Vundle.vim"
@@ -181,6 +201,39 @@ if [ $? -ne 0 ]
 	echo "TIPS: https://github.com/Valloric/YouCompleteMe"
 	exit 1
 fi
+
+touch ${HOME}/.gitconfig > /dev/null 2>&1
+mv ${HOME}/.gitconfig ${HOME}/${backdir}/
+test $? -ne 0 && echo "${HOME}/.gitconfig backup to ${HOME}/$backdir failed." && exit 1
+echo ""
+echo ""
+echo "${HOME}/.gitconfig backup to ${HOME}/$backdir ok"
+echo ""
+echo ""
+sleep 3
+
+gcmd="cp ${HOME}/tmp/vimdocs/gitconfig.txt ${HOME}/.gitconfig"
+$gcmd
+if [ $? -ne 0 ]
+	then
+	echo "error: create .gitconfig failed: $gcmd"
+	exit 1
+fi
+
+#
+echo "---"
+echo "    setup gitconfig ..."
+echo "---"
+sleep 3
+vim ${HOME}/.gitconfig
+
+sudo cp ${HOME}/tmp/vimdocs/meld.git /usr/bin/ && sudo chmod 0655 /usr/bin/meld.git && sudo chown root:root /usr/bin/meld.git
+if [ $? -ne 0 ]
+	then
+	echo "error: create /usr/bin/meld.git failed."
+	exit 1
+fi
+
 echo "ALL DONE!"
 cat ${HOME}/tmp/vimdocs/vim-tips.txt
 #cd - >/dev/null 2>&1

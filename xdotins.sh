@@ -11,6 +11,13 @@ then
     exit $?
 fi
 
+sudo true
+if [ $? -ne 0 ]
+	then
+	echo "error: you need sudo to install xdot"
+	exit 1
+fi
+
 utils="xdot"
 
 pkglist=""
@@ -71,17 +78,10 @@ then
     exit $?
 fi
 
-gcmd="cp ${HOME}/tmp/vimdocs/fixdot ${HOME}/bin/"
-mkdir -p ${HOME}/bin && $gcmd && chmod +x ${HOME}/bin/fixdot
+sudo cp ${HOME}/tmp/vimdocs/fixdot /usr/bin/ && sudo chmod 0655 /usr/bin/fixdot && sudo chown root:root /usr/bin/fixdot
 if [ $? -ne 0 ]
 	then
-	echo "error: create ${HOME}/bin/fixdot failed: $gcmd"
-	exit 1
-fi
-if [ "$(whereis -b fixdot|awk '{print $2}')" != "${HOME}/bin/fixdot" ]
-	then
-	echo "error: ${HOME}/bin does not in search path: $PATH"
-	echo "TIPS: add ${HOME}/bin into your search path."
+	echo "error: create /usr/bin/fixdot failed."
 	exit 1
 fi
 echo "ALL DONE!"

@@ -19,3 +19,5 @@
 
 c+n next complete, c+p previous complete
 
+use command 'git mergetool' to call meld for git conflict merge.
+
