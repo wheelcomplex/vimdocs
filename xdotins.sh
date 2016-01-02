@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # bootstrap:
-# cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
+# cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/xdotins.sh' -O ${HOME}/tmp/xdotins.sh && chmod +x ${HOME}/tmp/xdotins.sh && ${HOME}/tmp/xdotins.sh
 #
 
 if [ "$1" = 'debug' -a "$DEBUGVIMSETUP" != 'YES' ]
