@@ -40,6 +40,20 @@ fi
     exit $?
 fi
 
+cmdok=`which cmake| wc -l`
+if [ $cmdok -eq 0 ]
+	then
+	echo "error: cmake has not installed"
+	echo "TIPS: sudo apt-get update && sudo apt-get install cmake"
+	exit 1
+fi
+
+if [ ! -x /usr/bin/vim ]
+	then
+	echo "error: /usr/bin/vim no executable."
+	exit 1
+fi
+
 cat /etc/issue.net
 isubuntu=`cat /etc/issue.net| grep -ci Ubuntu`
 if [ $isubuntu -eq 0 ]
@@ -53,11 +67,10 @@ if [ `id -u` -eq 0 ]
 	exit 1
 fi
 
-if [ ! -x /usr/bin/vim ]
-	then
-	echo "error: /usr/bin/vim no executable."
-	exit 1
-fi
+echo ""
+echo "TIPS: checking vim 7 installation ..."
+echo "TIPS: sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
+echo ""
 
 vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
 if [ $vimverok -eq 7 ]
@@ -200,7 +213,7 @@ fi
 # start Vim，and run command :PluginInstall
 # :qall exit vim and compile YouCompleteMe
 
-cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.sh
+cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.py
 if [ $? -ne 0 ]
 	then
 	echo "error: YouCompleteMe compile failed: cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh"
