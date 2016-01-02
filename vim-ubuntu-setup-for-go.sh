@@ -18,40 +18,29 @@ then
     exit $?
 fi
 
-if [ "$VIMSETUPNEW" != 'YES' ]
-then
-gcmd="git clone https://github.com/wheelcomplex/vimdocs.git ${HOME}/tmp/vimdocs/"
-rm -rf ${HOME}/tmp/vimdocs && mkdir -p ${HOME}/tmp/ && $gcmd
-if [ $? -ne 0 ]
-	then
-	echo "error: git clone failed: $gcmd"
-	exit 1
-fi
-    export VIMSETUPNEW='YES'
-    gcmd="${HOME}/tmp/vimdocs/`basename $0`"
-    chmod +x $gcmd
-    echo "Run script from git: $gcmd"
-    if [ "$DEBUGVIMSETUP" = 'YES' ]
-    then
-        /bin/bash -x $gcmd $@
-        exit $?
-    fi
-    $gcmd $@
-    exit $?
-fi
+utils="git hg:mercurial cmake vim"
 
-cmdok=`which cmake| wc -l`
-if [ $cmdok -eq 0 ]
+pkglist=""
+for aaa in $utils
+do
+	cmd=`echo "$aaa"|awk -F':' '{print $1}'`
+	pkg=`echo "$aaa"|awk -F':' '{print $2}'`
+	test -z "$pkg" && pkg="$cmd"
+	cmdok=`which $cmd| wc -l`
+	if [ $cmdok -eq 0 ]
+		then
+		echo "warning: try to install $pkg($cmd)"
+		pkglist="$pkglist $pkg"
+	fi
+done
+if [ -n "$pkglist" ]
 	then
-	echo "error: cmake has not installed"
-	echo "TIPS: sudo apt-get update && sudo apt-get install cmake"
-	exit 1
-fi
-
-if [ ! -x /usr/bin/vim ]
-	then
-	echo "error: /usr/bin/vim no executable."
-	exit 1
+	sudo apt-get -y install $pkglist
+	if [ $? -ne 0 ]
+		then
+		echo "error: packages install failed: $pkglist"
+		exit 1
+	fi
 fi
 
 cat /etc/issue.net
@@ -67,10 +56,29 @@ if [ `id -u` -eq 0 ]
 	exit 1
 fi
 
-echo ""
-echo "TIPS: checking vim 7 installation ..."
-echo "TIPS: sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
-echo ""
+if [ "$VIMSETUPNEW" != 'YES' ]
+then
+	gcmd="git clone https://github.com/wheelcomplex/vimdocs.git ${HOME}/tmp/vimdocs/"
+	rm -rf ${HOME}/tmp/vimdocs && mkdir -p ${HOME}/tmp/ && $gcmd
+	if [ $? -ne 0 ]
+		then
+		echo "error: git clone failed: $gcmd"
+		exit 1
+	fi
+    export VIMSETUPNEW='YES'
+    gcmd="${HOME}/tmp/vimdocs/`basename $0`"
+    chmod +x $gcmd
+    echo "Run script from git: $gcmd"
+    if [ "$DEBUGVIMSETUP" = 'YES' ]
+    then
+        /bin/bash -x $gcmd $@
+        exit $?
+    fi
+    $gcmd $@
+    exit $?
+fi
+
+vim7tips="sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
 
 vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
 if [ $vimverok -eq 7 ]
@@ -79,75 +87,35 @@ then
         if [ $vimverok -eq 0 ]
         	then
         	echo "error: this script support VIM - Vi IMproved 7.x only."
-        	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
+        	echo "TIPS: $vim7tips"
         	exit 1
         fi
         vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $2}'`
         if [ $vimverok -le 3 ]
         	then
         	echo "error: this script support VIM - Vi IMproved 7.4 or later"
-        	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
-        	echo "TIPS: http://www.vim.org/download.php"
+        	echo "TIPS: $vim7tips"
         	exit 1
         fi
 elif [ $vimverok -lt 7 ]
 then
 	echo "error: this script support VIM - Vi IMproved 7.4 or later"
-	echo "TIPS: sudo apt-get update && sudo apt-get install vim"
-	echo "TIPS: http://www.vim.org/download.php"
+	echo "TIPS: $vim7tips"
 	exit 1
 fi
 
-cmdok=`which xdot| wc -l`
-if [ $cmdok -eq 0 ]
+goenvok=`go env|wc -l`
+if [ $goenvok -eq 0 ]
 	then
-	echo "error: xdot has not installed"
-	echo "TIPS: sudo apt-get update && sudo apt-get install xdot"
+	go env
+	echo "error: Go environment no ready."
+	echo "TIPS: https://golang.org/doc/install/source"
 	exit 1
 fi
 
-cmdok=`which git| wc -l`
-if [ $cmdok -eq 0 ]
-	then
-	echo "error: git has not installed"
-	echo "TIPS: sudo apt-get update && sudo apt-get install git"
-	exit 1
-fi
-
-cmdok=`which hg| wc -l`
-if [ $cmdok -eq 0 ]
-	then
-	echo "error: hg/mercurial has not installed"
-	echo "TIPS: sudo apt-get update && sudo apt-get install mercurial"
-	exit 1
-fi
-
-cmdok=`env | grep -c 'GOARCH='`
-if [ $cmdok -eq 0 ]
-	then
-	echo "warnning: GOARCH environment has not setup"
-	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
-	echo "TIPS: http://golang.org/doc/install"
-	#exit 1
-fi
-
-cmdok=`env | grep -c 'GOROOT='`
-if [ $cmdok -eq 0 ]
-	then
-	echo "warning: GOROOT environment has not setup"
-	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
-	echo "TIPS: http://golang.org/doc/install"
-	#exit 1
-fi
-
-cmdok=`env | grep -c 'GOPATH='`
-if [ $cmdok -eq 0 ]
-	then
-	echo "warning: GOPATH environment has not setup"
-	echo "TIPS: http://wiki.ubuntu.org.cn/Golang"
-	echo "TIPS: http://golang.org/doc/install"
-	#exit 1
-fi
+echo "setup with Go environment:"
+go env
+echo "---"
 
 cd ${HOME} 
 backdir="vim-back-wheelcomplex/`date +%Y-%m-%d-%H-%M-%S`/" &&mkdir -p "${HOME}/$backdir"
@@ -185,14 +153,6 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-gcmd="cp ${HOME}/tmp/vimdocs/fixdot ${HOME}/bin/"
-mkdir -p ${HOME}/bin && $gcmd && chmod +x ${HOME}/bin/fixdot
-if [ $? -ne 0 ]
-	then
-	echo "error: create ${HOME}/bin/fixdot failed: $gcmd"
-	exit 1
-fi
-
 gcmd="vim +PluginInstall +qall"
 $gcmd
 if [ $? -ne 0 ]
@@ -216,10 +176,12 @@ fi
 cd ${HOME}/.vim/bundle/YouCompleteMe && ./install.py
 if [ $? -ne 0 ]
 	then
-	echo "error: YouCompleteMe compile failed: cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.sh"
+	echo "error: YouCompleteMe compile failed"
+	echo "TIPS: cd ${HOME}/.vim/bundle/YouCompleteMe && git submodule update --init --recursive && ./install.py"
 	echo "TIPS: https://github.com/Valloric/YouCompleteMe"
 	exit 1
 fi
 echo "ALL DONE!"
+cat ${HOME}/tmp/vimdocs/vim-tips.txt
 #cd - >/dev/null 2>&1
 #
