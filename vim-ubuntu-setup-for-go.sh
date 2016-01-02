@@ -18,6 +18,7 @@ then
     exit $?
 fi
 
+echo "---- sudo test ----"
 sudo true
 if [ $? -ne 0 ]
 	then
@@ -73,7 +74,7 @@ then
 fi
 
 
-utils="hg:mercurial cmake vim meld"
+utils="hg:mercurial cmake vim meld gitk"
 
 pkglist=""
 for aaa in $utils
@@ -159,7 +160,7 @@ if [ $needback -ne 0 ]
     test $? -ne 0 && echo "backup to ${HOME}/$backdir failed." && exit 1
     echo ""
     echo ""
-    echo "${HOME}/.vim\* backup to ${HOME}/$backdir ok"
+    echo "${HOME}/.vim* backup to ${HOME}/$backdir ok"
     echo ""
     echo ""
     sleep 3
