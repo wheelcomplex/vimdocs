@@ -81,7 +81,7 @@ do
 	cmd=`echo "$aaa"|awk -F':' '{print $1}'`
 	pkg=`echo "$aaa"|awk -F':' '{print $2}'`
 	test -z "$pkg" && pkg="$cmd"
-	cmdok=`which $cmd| wc -l`
+	cmdok=`which $cmd|grep -v "${HOME}"| wc -l`
 	if [ $cmdok -eq 0 ]
 		then
 		echo "warning: try to install $pkg($cmd)"
@@ -98,7 +98,15 @@ if [ -n "$pkglist" ]
 	fi
 fi
 
+
 vim7tips="sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
+
+if [ ! -x /usr/bin/vim ]
+	then
+	echo "error: vim not installed."
+    echo "TIPS: $vim7tips"
+    exit 1
+fi
 
 vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
 if [ $vimverok -eq 7 ]
@@ -173,7 +181,7 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-gcmd="vim +PluginInstall +qall"
+gcmd="/usr/bin/vim +PluginInstall +qall"
 $gcmd
 if [ $? -ne 0 ]
 	then
@@ -181,7 +189,7 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-gcmd="vim +GoInstallBinaries +qall"
+gcmd="/usr/bin/vim +GoInstallBinaries +qall"
 $gcmd
 if [ $? -ne 0 ]
 	then
@@ -225,7 +233,7 @@ echo "---"
 echo "    setup gitconfig ..."
 echo "---"
 sleep 3
-vim ${HOME}/.gitconfig
+/usr/bin/vim ${HOME}/.gitconfig
 
 sudo cp ${HOME}/tmp/vimdocs/meld.git /usr/bin/ && sudo chmod 0655 /usr/bin/meld.git && sudo chown root:root /usr/bin/meld.git
 if [ $? -ne 0 ]
