@@ -51,6 +51,14 @@ if [ $cmdok -eq 0 ]
 	fi
 fi
 
+echo "installing python-dev for YouCompleteMe ..."
+sudo apt-get -y install python-dev
+if [ $? -ne 0 ]
+	then
+	echo "error: packages install failed: python-dev"
+	exit 1
+fi
+
 if [ "$VIMSETUPNEW" != 'YES' ]
 then
 	gcmd="git clone https://github.com/wheelcomplex/vimdocs.git ${HOME}/tmp/vimdocs/"
