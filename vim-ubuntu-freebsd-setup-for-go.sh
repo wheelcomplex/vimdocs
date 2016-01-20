@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # bootstrap:
 # cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
@@ -26,11 +26,13 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
+uname -a
+isfreebsd=`uname -s| grep -ic freebsd`
 cat /etc/issue.net
 isubuntu=`cat /etc/issue.net| grep -ci Ubuntu`
-if [ $isubuntu -eq 0 ]
+if [ $isubuntu -eq 0 $isfreebsd -eq 0 ]
 	then
-	echo "error: this script support ubuntu only."
+	echo "error: this script support ubuntu/FreeBSD only."
 	exit 1
 fi
 if [ `id -u` -eq 0 ]
@@ -39,11 +41,17 @@ if [ `id -u` -eq 0 ]
 	exit 1
 fi
 
+pkginscmd="apt- get install -y"
+if [ $isfreebsd -ne 0 ]
+then
+        pkginscmd="pkg install -y"
+fi
+
 cmdok=`which git| wc -l`
 if [ $cmdok -eq 0 ]
 	then
 	echo "warning: try to install git(git)"
-	sudo apt-get -y install git
+	sudo $pkginscmd git
 	if [ $? -ne 0 ]
 		then
 		echo "error: packages install failed: $pkglist"
@@ -52,7 +60,7 @@ if [ $cmdok -eq 0 ]
 fi
 
 echo "installing python-dev for YouCompleteMe ..."
-sudo apt-get -y install python-dev
+sudo $pkginscmd python-dev
 if [ $? -ne 0 ]
 	then
 	echo "error: packages install failed: python-dev"
@@ -99,7 +107,7 @@ do
 done
 if [ -n "$pkglist" ]
 	then
-	sudo apt-get -y install $pkglist
+	sudo $pkginscmd $pkglist
 	if [ $? -ne 0 ]
 		then
 		echo "error: packages install failed: $pkglist"
@@ -107,27 +115,34 @@ if [ -n "$pkglist" ]
 	fi
 fi
 
+vimcmd="/usr/bin/vim"
 
 vim7tips="sudo sudo add-apt-repository ppa:vim-full/ppa && sudo apt-get update && sudo apt-get install vim"
+if [ $isfreebsd -ne 0 ]
+then
+        vim7tips="please install/upgrade vim to 7.4+"
+        vimcmd="/usr/local/bin/vim"
+fi
 
-if [ ! -x /usr/bin/vim ]
+
+if [ ! -x $vimcmd ]
 	then
 	echo "error: vim not installed."
     echo "TIPS: $vim7tips"
     exit 1
 fi
 
-vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
+vimverok=`$vimcmd --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $1}'`
 if [ $vimverok -eq 7 ]
 then
-        vimverok=`/usr/bin/vim --version | grep -c 'VIM - Vi IMproved 7.'`
+        vimverok=`$vimcmd --version | grep -c 'VIM - Vi IMproved 7.'`
         if [ $vimverok -eq 0 ]
         	then
         	echo "error: this script support VIM - Vi IMproved 7.x only."
         	echo "TIPS: $vim7tips"
         	exit 1
         fi
-        vimverok=`/usr/bin/vim --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $2}'`
+        vimverok=`$vimcmd --version | grep 'VIM - Vi IMproved 7.'| awk '{print $5}'| awk -F'.' '{print $2}'`
         if [ $vimverok -le 3 ]
         	then
         	echo "error: this script support VIM - Vi IMproved 7.4 or later"
@@ -190,7 +205,7 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-gcmd="/usr/bin/vim +PluginInstall +qall"
+gcmd="$vimcmd +PluginInstall +qall"
 $gcmd
 if [ $? -ne 0 ]
 	then
@@ -198,7 +213,7 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-gcmd="/usr/bin/vim +GoInstallBinaries +qall"
+gcmd="$vimcmd +GoInstallBinaries +qall"
 $gcmd
 if [ $? -ne 0 ]
 	then
@@ -242,7 +257,7 @@ echo "---"
 echo "    setup gitconfig ..."
 echo "---"
 sleep 3
-/usr/bin/vim ${HOME}/.gitconfig
+$vimcmd ${HOME}/.gitconfig
 
 sudo cp ${HOME}/tmp/vimdocs/meld.git /usr/bin/ && sudo chmod 0655 /usr/bin/meld.git && sudo chown root:root /usr/bin/meld.git
 if [ $? -ne 0 ]
