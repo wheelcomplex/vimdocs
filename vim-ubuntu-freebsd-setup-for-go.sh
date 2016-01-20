@@ -22,15 +22,19 @@ echo "---- sudo test ----"
 sudo true
 if [ $? -ne 0 ]
 	then
-	echo "error: you need sudo to install xdot"
+	echo "error: you need sudo to install packages"
 	exit 1
 fi
 
 uname -a
+isubuntu=0
 isfreebsd=`uname -s| grep -ic freebsd`
-cat /etc/issue.net
-isubuntu=`cat /etc/issue.net| grep -ci Ubuntu`
-if [ $isubuntu -eq 0 $isfreebsd -eq 0 ]
+if [ $isfreebsd -eq 0 ]
+then
+        cat /etc/issue.net 2>/dev/null
+        isubuntu=`cat /etc/issue.net 2>/dev/null | grep -ci Ubuntu`
+fi
+if [ $isubuntu -eq 0 -a $isfreebsd -eq 0 ]
 	then
 	echo "error: this script support ubuntu/FreeBSD only."
 	exit 1
@@ -64,7 +68,7 @@ sudo $pkginscmd python-dev
 if [ $? -ne 0 ]
 	then
 	echo "error: packages install failed: python-dev"
-	exit 1
+	#exit 1
 fi
 
 if [ "$VIMSETUPNEW" != 'YES' ]
