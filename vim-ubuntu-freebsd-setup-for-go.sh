@@ -270,7 +270,10 @@ echo "---"
 sleep 3
 $vimcmd ${HOME}/.gitconfig
 
-sudo cp ${HOME}/tmp/vimdocs/meld.git /usr/bin/ && sudo chmod 0655 /usr/bin/meld.git && sudo chown root:root /usr/bin/meld.git
+echo "setup /usr/bin/meld.git ..."
+rootgrp='root'
+test $isfreebsd -ne 0 && rootgrp='wheel'
+sudo cp ${HOME}/tmp/vimdocs/meld.git /usr/bin/ && sudo chmod 0655 /usr/bin/meld.git && sudo chown root:$rootgrp /usr/bin/meld.git
 if [ $? -ne 0 ]
 	then
 	echo "error: create /usr/bin/meld.git failed."
