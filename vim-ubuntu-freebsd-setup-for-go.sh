@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 #
 # bootstrap:
-# cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-setup-for-go.sh
-#
+# cd ${HOME} && mkdir -p ${HOME}/tmp/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vim-ubuntu-freebsd-setup-for-go.sh' -O ${HOME}/tmp/vim-ubuntu-freebsd-setup-for-go.sh && chmod +x ${HOME}/tmp/vim-ubuntu-freebsd-setup-for-go.sh && ${HOME}/tmp/vim-ubuntu-freebsd-setup-for-go.sh
 # update ~/.vimrc only
 # bakdir="${HOME}/vim-back-wheelcomplex/`date +%Y-%m-%d-%H-%M-%S`/" &&mkdir -p "$bakdir"&& cp -a ${HOME}/.vimrc $bakdir/ && wget 'https://raw.githubusercontent.com/wheelcomplex/vimdocs/master/vimrc.txt' -O ${HOME}/.vimrc
 #
@@ -63,12 +62,15 @@ if [ $cmdok -eq 0 ]
 	fi
 fi
 
-echo "installing python-dev for YouCompleteMe ..."
-sudo $pkginscmd python-dev
-if [ $? -ne 0 ]
-	then
-	echo "error: packages install failed: python-dev"
-	#exit 1
+if [ $isfreebsd -eq 0 ]
+then
+	echo "installing python-dev for YouCompleteMe ..."
+	sudo $pkginscmd python-dev
+	if [ $? -ne 0 ]
+		then
+		echo "error: packages install failed: python-dev"
+		exit 1
+	fi
 fi
 
 if [ "$VIMSETUPNEW" != 'YES' ]
@@ -95,6 +97,11 @@ fi
 
 
 utils="hg:mercurial cmake vim meld gitk"
+if [ $isfreebsd -ne 0 ]
+then
+	# gitk is include in git-gui
+	utils="hg:mercurial cmake vim meld gitk:git-gui"
+fi
 
 pkglist=""
 for aaa in $utils
