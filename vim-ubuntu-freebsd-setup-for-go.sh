@@ -263,13 +263,6 @@ if [ $? -ne 0 ]
 	exit 1
 fi
 
-#
-echo "---"
-echo "    setup gitconfig ..."
-echo "---"
-sleep 3
-$vimcmd ${HOME}/.gitconfig
-
 echo "setup /usr/bin/meld.git ..."
 rootgrp='root'
 test $isfreebsd -ne 0 && rootgrp='wheel'
@@ -278,6 +271,18 @@ if [ $? -ne 0 ]
 	then
 	echo "error: create /usr/bin/meld.git failed."
 	exit 1
+fi
+#
+
+echo "---"
+echo "    setup gitconfig ..."
+echo "---"
+sleep 3
+if [ -s ${HOME}/$backdir/.gitconfig ]
+then
+	meld ${HOME}/.gitconfig ${HOME}/$backdir/.gitconfig
+else
+	$vimcmd ${HOME}/.gitconfig
 fi
 
 echo "ALL DONE!"
